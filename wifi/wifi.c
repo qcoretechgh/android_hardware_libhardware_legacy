@@ -993,8 +993,8 @@ int wifi_change_fw_path(const char *fwpath)
 
     fd = open(WIFI_DRIVER_FW_PATH_PARAM, O_WRONLY);
     if (fd < 0) {
-        LOGE("Failed to open wlan fw path param (%s)", strerror(errno));
-        return -1;
+        LOGD("Wlan fw path param (%s) not found, skipping", WIFI_DRIVER_FW_PATH_PARAM);
+        return 0;
     }
     len = strlen(fwpath) + 1;
     if (write(fd, fwpath, len) != len) {
