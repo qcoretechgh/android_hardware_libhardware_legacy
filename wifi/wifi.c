@@ -289,6 +289,16 @@ int wifi_load_driver()
 #ifdef WIFI_DRIVER_LOADER_DELAY
         usleep(WIFI_DRIVER_LOADER_DELAY);
 #endif
+        {
+            char iface[PROPERTY_VALUE_MAX];
+            char net_path[128];
+            int iface_wait = 50; /* wait up to 5s for netdev registration */
+            property_get("wifi.interface", iface, WIFI_TEST_INTERFACE);
+            snprintf(net_path, sizeof(net_path), "/sys/class/net/%s", iface);
+            while (iface_wait-- > 0 && access(net_path, F_OK) != 0) {
+                usleep(100000);
+            }
+        }
         property_set(DRIVER_PROP_NAME, "ok");
     }
     else {
